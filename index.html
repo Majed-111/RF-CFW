@@ -16,7 +16,7 @@
             --bg-card: rgba(18, 18, 18, 0.85);
             --border-color: rgba(211, 47, 47, 0.3);
             --text-main: #ffffff;
-            --text-muted: #b0b0b0;
+            --text-muted: #d0d0d0;
         }
 
         * {
@@ -26,7 +26,6 @@
             font-family: 'Cairo', sans-serif;
         }
 
-        /* منع التمرير العام للصفحة لتجنب الفراغات الزائدة */
         html, body {
             background-color: var(--bg-black);
             color: var(--text-main);
@@ -211,7 +210,7 @@
             box-shadow: 0 0 15px rgba(88, 101, 242, 0.4);
         }
 
-        /* الأقسام العامة (تأخذ شاشة كاملة بدون تمرير طولي غير مبرر) */
+        /* الأقسام العامة */
         section {
             position: absolute;
             top: 0;
@@ -259,16 +258,17 @@
             box-shadow: 0 0 10px var(--primary-red);
         }
 
-        /* الصفحة الرئيسية - صورة خلفية كاملة للشاشة */
+        /* الصفحة الرئيسية - خلفية واضحة والنصوص في الأسفل داخل إطار أحمر للزر */
         #home {
             padding: 0;
             max-width: 100%;
             height: 100vh;
-            background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('https://cdn.discordapp.com/attachments/1555059487369596938/1555543843313684480/Royal_Five_1.png?backend=b2&ex=6ac19158&is=6ac03fd8&hm=0192ab324fb99468545e0ec662dbe4e8648acf976b8f7de972ee29073bfb1bb4&');
+            background-image: linear-gradient(to top, rgba(8,8,8,0.95) 10%, rgba(8,8,8,0.2) 60%), url('https://cdn.discordapp.com/attachments/1555059487369596938/1555543843313684480/Royal_Five_1.png?backend=b2&ex=6ac19158&is=6ac03fd8&hm=0192ab324fb99468545e0ec662dbe4e8648acf976b8f7de972ee29073bfb1bb4&');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             text-align: center;
+            justify-content: flex-end;
         }
 
         #home .home-content {
@@ -276,40 +276,52 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-end;
+            width: 100%;
             height: 100%;
-            padding: 0 20px;
+            padding-bottom: 60px;
+            padding-left: 20px;
+            padding-right: 20px;
         }
 
         #home p {
-            color: var(--text-muted);
-            font-size: 18px;
-            max-width: 600px;
-            margin-bottom: 25px;
-            line-height: 1.6;
+            color: #e0e0e0;
+            font-size: 14px;
+            max-width: 650px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            font-weight: 600;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+        }
+
+        /* زر الانضمام داخل مربع أحمر فخم */
+        .discord-box-btn {
+            background: rgba(15, 15, 15, 0.85);
+            border: 2px solid var(--primary-red);
+            padding: 8px 25px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0 0 25px rgba(211, 47, 47, 0.5);
+            transition: 0.3s;
+        }
+
+        .discord-box-btn:hover {
+            background: var(--primary-red);
+            transform: translateY(-3px);
+            box-shadow: 0 0 35px rgba(211, 47, 47, 0.8);
         }
 
         .main-btn {
-            background: var(--primary-red);
             color: white;
-            padding: 12px 35px;
-            border-radius: 8px;
             text-decoration: none;
             font-weight: 700;
-            font-size: 16px;
+            font-size: 15px;
             display: flex;
             align-items: center;
             gap: 10px;
-            transition: 0.3s;
-            box-shadow: 0 5px 20px rgba(211, 47, 47, 0.4);
             border: none;
+            background: transparent;
             cursor: pointer;
-        }
-
-        .main-btn:hover {
-            background: var(--dark-red);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(211, 47, 47, 0.7);
         }
 
         .delete-btn {
@@ -453,7 +465,7 @@
             display: flex;
         }
 
-        /* القوانين (يحتوي على سكول داخلي خاص به فقط عند الحاجة) */
+        /* القوانين */
         #rules {
             justify-content: flex-start;
             padding-top: 110px;
@@ -638,13 +650,15 @@
             </a>
         </header>
 
-        <!-- الصفحة الرئيسية (خلفية كاملة للشاشة بدون مساحات بيضاء أو فراغات) -->
+        <!-- الصفحة الرئيسية -->
         <section id="home" class="active-section">
             <div class="home-content">
                 <p>أقوى تجربة حياة واقعية في سيرفرات FiveM. نظام متوازن، سيناريوهات حماسية، ومجتمع احترافي بانتظارك.</p>
-                <a href="https://discord.gg/m2SkpuJ26" target="_blank" class="main-btn">
-                    <i class="fa-solid fa-gamepad"></i> انضم للسيرفر الآن
-                </a>
+                <div class="discord-box-btn">
+                    <a href="https://discord.gg/m2SkpuJ26" target="_blank" class="main-btn">
+                        <i class="fa-solid fa-gamepad"></i> انضم للسيرفر الآن
+                    </a>
+                </div>
             </div>
         </section>
 
@@ -679,7 +693,7 @@
                 <div class="admin-section-box">
                     <input type="text" id="newsTitleInput" placeholder="عنوان الخبر...">
                     <textarea id="newsDescInput" rows="2" placeholder="محتوى الخبر أو التحديث..."></textarea>
-                    <button class="main-btn" onclick="addNewNews()">نشر الخبر</button>
+                    <button class="main-btn" onclick="addNewNews()" style="background:var(--primary-red); justify-content:center;">نشر الخبر</button>
                 </div>
             </div>
 
@@ -702,7 +716,7 @@
             <div id="general-rules" class="rules-content-box active">
                 <div id="add-rule-general" class="add-rule-box">
                     <input type="text" id="input-rule-general" placeholder="إضافة بند جديد للقوانين العامة...">
-                    <button class="main-btn" onclick="addNewRule('general')">إضافة البند</button>
+                    <button class="main-btn" onclick="addNewRule('general')" style="background:var(--primary-red); justify-content:center;">إضافة البند</button>
                 </div>
                 <div id="rules-container-general"></div>
             </div>
@@ -711,7 +725,7 @@
             <div id="robberies-rules" class="rules-content-box">
                 <div id="add-rule-robberies" class="add-rule-box">
                     <input type="text" id="input-rule-robberies" placeholder="إضافة بند جديد للسرقات والرهائن...">
-                    <button class="main-btn" onclick="addNewRule('robberies')">إضافة البند</button>
+                    <button class="main-btn" onclick="addNewRule('robberies')" style="background:var(--primary-red); justify-content:center;">إضافة البند</button>
                 </div>
                 <div id="rules-container-robberies"></div>
             </div>
@@ -720,7 +734,7 @@
             <div id="police-rules" class="rules-content-box">
                 <div id="add-rule-police" class="add-rule-box">
                     <input type="text" id="input-rule-police" placeholder="إضافة بند جديد للوحدات العسكرية...">
-                    <button class="main-btn" onclick="addNewRule('police')">إضافة البند</button>
+                    <button class="main-btn" onclick="addNewRule('police')" style="background:var(--primary-red); justify-content:center;">إضافة البند</button>
                 </div>
                 <div id="rules-container-police"></div>
             </div>
@@ -729,7 +743,7 @@
             <div id="crime-rules" class="rules-content-box">
                 <div id="add-rule-crime" class="add-rule-box">
                     <input type="text" id="input-rule-crime" placeholder="إضافة بند جديد لقوانين الإجرام...">
-                    <button class="main-btn" onclick="addNewRule('crime')">إضافة البند</button>
+                    <button class="main-btn" onclick="addNewRule('crime')" style="background:var(--primary-red); justify-content:center;">إضافة البند</button>
                 </div>
                 <div id="rules-container-crime"></div>
             </div>
@@ -738,7 +752,7 @@
             <div id="discord-rules" class="rules-content-box">
                 <div id="add-rule-discord" class="add-rule-box">
                     <input type="text" id="input-rule-discord" placeholder="إضافة بند جديد لقوانين الديسكورد...">
-                    <button class="main-btn" onclick="addNewRule('discord')">إضافة البند</button>
+                    <button class="main-btn" onclick="addNewRule('discord')" style="background:var(--primary-red); justify-content:center;">إضافة البند</button>
                 </div>
                 <div id="rules-container-discord"></div>
             </div>
