@@ -31,13 +31,31 @@
             background-color: var(--bg-black);
             color: var(--text-main);
             overflow-x: hidden;
-            background-image: 
-                linear-gradient(rgba(8, 8, 8, 0.88), rgba(8, 8, 8, 0.95)),
-                url('https://cdn.discordapp.com/attachments/1555059487369596938/1555059812361044090/mylogo.png?backend=b2&ex=6ac1c8ce&is=6ac0774e&hm=02f6cebb00db22dd42ce7217749196ba087ec949daeb11c08809da9e852de0d2&');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            position: relative;
             min-height: 100vh;
+        }
+
+        /* خلفية شعار السيرفر الشفافة المتحركة */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('https://cdn.discordapp.com/attachments/1555059487369596938/1555059812361044090/mylogo.png?backend=b2&ex=6ac1c8ce&is=6ac0774e&hm=02f6cebb00db22dd42ce7217749196ba087ec949daeb11c08809da9e852de0d2&');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 55vh;
+            opacity: 0.04;
+            z-index: -1;
+            animation: logoFloat 8s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        @keyframes logoFloat {
+            0% { transform: scale(1) translateY(0); opacity: 0.03; }
+            100% { transform: scale(1.08) translateY(-15px); opacity: 0.06; }
         }
 
         /* --- شاشة البداية (الفيديو المباشر) --- */
@@ -236,12 +254,12 @@
             align-items: center;
         }
 
-        .hero-logo {
-            width: 190px;
-            height: 190px;
-            border-radius: 50%;
-            border: 4px solid var(--primary-red);
-            box-shadow: 0 0 35px rgba(211, 47, 47, 0.6);
+        .hero-banner {
+            width: 100%;
+            max-width: 650px;
+            border-radius: 15px;
+            border: 3px solid var(--primary-red);
+            box-shadow: 0 0 40px rgba(211, 47, 47, 0.5);
             margin-bottom: 30px;
             object-fit: cover;
             animation: pulseGlow 3s infinite alternate;
@@ -249,14 +267,7 @@
 
         @keyframes pulseGlow {
             0% { box-shadow: 0 0 20px rgba(211, 47, 47, 0.4); }
-            100% { box-shadow: 0 0 45px rgba(211, 47, 47, 0.9); }
-        }
-
-        #home h1 {
-            font-size: 50px;
-            font-weight: 900;
-            margin-bottom: 15px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+            100% { box-shadow: 0 0 45px rgba(211, 47, 47, 0.8); }
         }
 
         #home p {
@@ -347,7 +358,7 @@
             font-size: 14px;
         }
 
-        /* لوحة التحكم الشاملة للأدمن */
+        /* لوحة تحكم الأدمن للأخبار */
         .admin-controls {
             background: rgba(20, 20, 20, 0.95);
             border: 2px solid var(--primary-red);
@@ -375,11 +386,10 @@
             background: rgba(10, 10, 10, 0.6);
             padding: 15px;
             border-radius: 8px;
-            margin-bottom: 20px;
             border: 1px solid rgba(255,255,255,0.05);
         }
 
-        .admin-controls input, .admin-controls textarea, .admin-controls select {
+        .admin-controls input, .admin-controls textarea {
             width: 100%;
             padding: 12px;
             margin-bottom: 12px;
@@ -434,10 +444,9 @@
         }
 
         .news-admin-actions {
-            padding: 10px 25px 20px;
+            padding: 0 25px 20px;
             display: none;
             justify-content: flex-end;
-            gap: 10px;
         }
 
         .news-admin-actions.active {
@@ -490,6 +499,31 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* صندوق إضافة قانون خاص بكل قسم */
+        .add-rule-box {
+            background: rgba(211, 47, 47, 0.1);
+            border: 1px dashed var(--primary-red);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .add-rule-box.active {
+            display: block;
+        }
+
+        .add-rule-box input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: rgba(18, 18, 18, 0.9);
+            border: 1px solid var(--border-color);
+            color: #fff;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
         .rule-item {
             display: flex;
             align-items: flex-start;
@@ -515,11 +549,10 @@
 
         .admin-rule-actions {
             display: none;
-            gap: 8px;
         }
 
         .admin-rule-actions.active {
-            display: flex;
+            display: block;
         }
 
         /* تذييل الصفحة */
@@ -562,7 +595,6 @@
         @media(max-width: 768px) {
             header { padding: 15px 20px; }
             nav ul { display: none; }
-            #home h1 { font-size: 35px; }
         }
     </style>
 </head>
@@ -600,10 +632,9 @@
             </a>
         </header>
 
-        <!-- الصفحة الرئيسية -->
+        <!-- الصفحة الرئيسية (الصورة الجديدة المطلوبة بدون أي كلام أبيض فوقها) -->
         <section id="home" class="active-section">
-            <img src="https://cdn.discordapp.com/attachments/1555059487369596938/1555059812361044090/mylogo.png?backend=b2&ex=6ac1c8ce&is=6ac0774e&hm=02f6cebb00db22dd42ce7217749196ba087ec949daeb11c08809da9e852de0d2&" alt="Royal Five" class="hero-logo">
-            <h1>ROYAL FIVE ROLEPLAY</h1>
+            <img src="https://cdn.discordapp.com/attachments/1555059487369596938/1555543843313684480/Royal_Five_1.png?backend=b2&ex=6ac19158&is=6ac03fd8&hm=0192ab324fb99468545e0ec662dbe4e8648acf976b8f7de972ee29073bfb1bb4&" alt="Royal Five" class="hero-banner">
             <p>أقوى تجربة حياة واقعية في سيرفرات FiveM. نظام متوازن، سيناريوهات حماسية، ومجتمع احترافي بانتظارك.</p>
             <div class="hero-btns">
                 <a href="https://discord.gg/m2SkpuJ26" target="_blank" class="main-btn">
@@ -638,43 +669,17 @@
         <section id="news">
             <h2 class="section-title">الأخبار والتحديثات الأخيرة</h2>
             
-            <!-- لوحة تحكم الأدمن الشاملة -->
+            <!-- لوحة تحكم الأدمن (نشر الأخبار فقط) -->
             <div id="adminPanel" class="admin-controls">
-                <h3><i class="fa-solid fa-shield-halved"></i> لوحة تحكم الأدمن الرئيسية</h3>
-                
-                <!-- إضافة خبر جديد -->
+                <h3><i class="fa-solid fa-newspaper"></i> إدارة الأخبار</h3>
                 <div class="admin-section-box">
-                    <h4 style="color: #fff; margin-bottom: 10px;"><i class="fa-solid fa-newspaper"></i> إضافة خبر أو تحديث جديد</h4>
                     <input type="text" id="newsTitleInput" placeholder="عنوان الخبر...">
                     <textarea id="newsDescInput" rows="3" placeholder="محتوى الخبر أو التحديث..."></textarea>
                     <button class="main-btn" onclick="addNewNews()">نشر الخبر</button>
                 </div>
-
-                <!-- إضافة بند قانون جديد -->
-                <div class="admin-section-box">
-                    <h4 style="color: #fff; margin-bottom: 10px;"><i class="fa-solid fa-scale-balanced"></i> إضافة بند جديد إلى القوانين</h4>
-                    <select id="ruleCategorySelect">
-                        <option value="general">القوانين العامة</option>
-                        <option value="robberies">السرقات والرهائن</option>
-                        <option value="police">الوحدات العسكرية</option>
-                        <option value="crime">قوانين الإجرام</option>
-                        <option value="discord">قوانين الديسكورد</option>
-                    </select>
-                    <input type="text" id="ruleTextInput" placeholder="نص البند القانوني الجديد...">
-                    <button class="main-btn" onclick="addNewRule()">إضافة البند للقوانين</button>
-                </div>
-
-                <!-- تغيير كلمة مرور الأدمن -->
-                <div class="admin-section-box" style="margin-bottom:0;">
-                    <h4 style="color: #fff; margin-bottom: 10px;"><i class="fa-solid fa-key"></i> تغيير كلمة مرور الأدمن</h4>
-                    <input type="password" id="newPasswordInput" placeholder="أدخل كلمة المرور الجديدة المعقدة...">
-                    <button class="main-btn" style="background:#2e7d32;" onclick="changeAdminPassword()">حفظ كلمة المرور الجديدة</button>
-                </div>
             </div>
 
-            <div class="news-grid" id="newsContainer">
-                <!-- يتم تعبئة الأخبار ديناميكياً -->
-            </div>
+            <div class="news-grid" id="newsContainer"></div>
         </section>
 
         <!-- القوانين -->
@@ -691,26 +696,46 @@
 
             <!-- القوانين العامة -->
             <div id="general-rules" class="rules-content-box active">
+                <div id="add-rule-general" class="add-rule-box">
+                    <input type="text" id="input-rule-general" placeholder="إضافة بند جديد للقوانين العامة...">
+                    <button class="main-btn" onclick="addNewRule('general')">إضافة البند</button>
+                </div>
                 <div id="rules-container-general"></div>
             </div>
 
             <!-- السرقات والرهائن -->
             <div id="robberies-rules" class="rules-content-box">
+                <div id="add-rule-robberies" class="add-rule-box">
+                    <input type="text" id="input-rule-robberies" placeholder="إضافة بند جديد للسرقات والرهائن...">
+                    <button class="main-btn" onclick="addNewRule('robberies')">إضافة البند</button>
+                </div>
                 <div id="rules-container-robberies"></div>
             </div>
 
             <!-- الوحدات العسكرية -->
             <div id="police-rules" class="rules-content-box">
+                <div id="add-rule-police" class="add-rule-box">
+                    <input type="text" id="input-rule-police" placeholder="إضافة بند جديد للوحدات العسكرية...">
+                    <button class="main-btn" onclick="addNewRule('police')">إضافة البند</button>
+                </div>
                 <div id="rules-container-police"></div>
             </div>
 
             <!-- قوانين الإجرام -->
             <div id="crime-rules" class="rules-content-box">
+                <div id="add-rule-crime" class="add-rule-box">
+                    <input type="text" id="input-rule-crime" placeholder="إضافة بند جديد لقوانين الإجرام...">
+                    <button class="main-btn" onclick="addNewRule('crime')">إضافة البند</button>
+                </div>
                 <div id="rules-container-crime"></div>
             </div>
 
             <!-- قوانين الديسكورد -->
             <div id="discord-rules" class="rules-content-box">
+                <div id="add-rule-discord" class="add-rule-box">
+                    <input type="text" id="input-rule-discord" placeholder="إضافة بند جديد لقوانين الديسكورد...">
+                    <button class="main-btn" onclick="addNewRule('discord')">إضافة البند</button>
+                </div>
                 <div id="rules-container-discord"></div>
             </div>
         </section>
@@ -725,6 +750,9 @@
     <button class="admin-login-trigger" onclick="toggleAdminMode()">🔐 لوحة الأدمن</button>
 
     <script>
+        // كلمة المرور الخاصة بالأدمن (تحكم بها من هنا فقط برمجياً)
+        const secureAdminPassword = "Royal#5_Secret_Admin_2026!";
+
         // إيقاف الفيديو وتخطي المقدمة
         const introScreen = document.getElementById('intro-screen');
         const mainContent = document.getElementById('main-content');
@@ -755,26 +783,9 @@
             evt.currentTarget.classList.add('active');
         }
 
-        // --- إدارة البيانات عبر LocalStorage ---
+        // --- حالة الأدمن والأخبار ---
         let isAdminLoggedIn = false;
 
-        // كلمة المرور الافتراضية الجديدة المعقدة
-        function getAdminPass() {
-            return localStorage.getItem('royal_admin_pass') || 'Royal#5_Admin_Secure_9988!';
-        }
-
-        function changeAdminPassword() {
-            let newPass = document.getElementById('newPasswordInput').value;
-            if(!newPass || newPass.length < 6) {
-                alert('الرجاء إدخال كلمة مرور جديدة قوية (أكثر من 6 أحرف/رموز)!');
-                return;
-            }
-            localStorage.setItem('royal_admin_pass', newPass);
-            document.getElementById('newPasswordInput').value = '';
-            alert('تم تغيير كلمة المرور بنجاح!');
-        }
-
-        // بيانات الأخبار الافتراضية
         let defaultNews = [
             { id: 1, title: "افتتاح سيرفر Royal Five التجريبي", date: "2026-10-03", desc: "تم بحمد الله افتتاح سيرفر رويال فايف بحلة جديدة وتجارب سينمائية مميزة. انضم الآن!" },
             { id: 2, title: "تحديث قوانين السرقات والرهائن", date: "2026-10-01", desc: "تم تحديث أعداد الوحدات العسكرية المطلوبة في السرقات الكبرى لزيادة التوازن بين الأطراف." }
@@ -835,14 +846,10 @@
                 "يجب وضع اسم كركتر واقعي.",
                 "في حال حضرت سيناريو باحدى كركتراتك، يمنع حضور كركتر اخر لك بالسيناريو نفسه.",
                 "يمنع دخول البيت او الشقه اثناء السيناريو.",
-                "يجب تشغيل برنامج التصوير مع وجود الصوت (20 دقيقة) اثناء اللعب عبر برنامج جيفورس ويجب ان يكون على الشاشة كاملة.",
+                "يجب تشغيل برنامج التصوير مع وجود الصوت (20 دقيقة) اثناء اللعب عبر برنامج جيفورس.",
                 "يمنع التدخل في سيناريو قائم.",
                 "يمنع لبس الملابس الجيشية والعسكريه ومن ضمنها الحزام العسكري.",
-                "يمنع التعرض للمسعفين الا في حال تعرض لك ايضا، ويمنع سرقة وتدمير اغراض الشرطة والمسعفيين.",
-                "تمنع الشخصنة بجميع اشكالها وانواعها.",
-                "يمنع التواصل الغير شرعي مثل: الدسكورد والبرامج المشابه له (Meta Gaming).",
-                "يمنع إرتداء او إستعمال اي خوذة اثناء مشاركتك في اي إطلاق ناري.",
-                "يمنع تلوين السيارة العسكريه الى لون لاينتمي الى قطاعك."
+                "يمنع التعرض للمسعفين الا في حال تعرض لك ايضا."
             ],
             robberies: [
                 "Store Robbery - (1-3)",
@@ -859,33 +866,20 @@
                 "ATM Robbery: (1 عساكر كحد أدنى) - 4 كحد أقصى.",
                 "House robbery: (2 عساكر كحد أدنى) - 5 كحد أقصى.",
                 "DigitalDen Robbery: (6 عساكر كحد أدنى) - 8 كحد أقصى.",
-                "Laundromat Robbery: (6 عساكر كحد أدنى) - 8 كحد أقصى.",
-                "Cash Exchange Robbery: (7 عساكر كحد أدنى) - 8 كحد أقصى.",
-                "Fleeca robbery: (8 عساكر كحد أدنى) - 7 كحد أقصى.",
-                "Jewelry Robbery: (9 عساكر كحد أدنى) - 10 كحد أقصى.",
-                "الحالات المفتوحة للاعبين: 9 كحد أقصى | للشرطة: 12 كحد أقصى."
+                "Jewelry Robbery: (9 عساكر كحد أدنى) - 10 كحد أقصى."
             ],
             crime: [
                 "يجب عليك فهم معنى الحياة الواقعية سواء كنت مجرم او رهينة.",
                 "يمنع الاتفاق مع اي شخص ليصبح رهينة.",
                 "مدة رهن الرهينة (20 دقيقة) الا في حال بدأ السيناريو يلغى الوقت.",
-                "يمنع المتاجره بالممنوعات في المناطق الامنه والنصب والاحتيال فيها.",
-                "يمنع سرقة المواطن الا بسبب وجود عداوه واثباتها بـ (3 مواقف مثبتة بالمقاطع).",
-                "حد المجموعات او العائلات المسموح فقط 15 شخصاً.",
-                "يمنع تحالف العصابات ضد الداخلية باستثناء السرقات.",
-                "يمنع خطف رهينه بغاية التوجه للسجن والتفاوض لاطلاق سراح سجين.",
-                "يمنع الاعتداء على مفاوض الشرطة أو مفاوض المجرمين.",
-                "يمنع مقاومة السلاح الناري بسلاح ابيض أو السلاح الثقيل بسلاح خفيف.",
-                "يمنع اطلاق النار او خطف العسكري في اي قضية مروريه.",
-                "يمنع منعاً باتاً مشاركة الرهينة للخاطفين في نص السيناريو."
+                "يمنع سرقة المواطن الا بسبب وجود عداوه واثباتها بـ (3 مواقف مثبتة).",
+                "حد المجموعات او العائلات المسموح فقط 15 شخصاً."
             ],
             discord: [
                 "احترام الآخرين: يُمنع تماماً التنمر، التحرش، أو مهاجمة أي شخص.",
                 "منع المحتوى الجنسي الصريح (NSFW) والعنف المفرط.",
                 "عدم نشر المحتوى غير القانوني أو الترويج له.",
-                "منع التهديدات وعمليات الـ Doxxing وحماية الخصوصية.",
-                "منع السبام والإعلانات المزعجة للسيرفرات الأخرى.",
-                "حظر الحسابات الوهمية والتحايل للهروب من العقوبات."
+                "منع السبام والإعلانات المزعجة للسيرفرات الأخرى."
             ]
         };
 
@@ -898,6 +892,14 @@
             let rulesObj = getStoredRules();
             for(let cat in rulesObj) {
                 let container = document.getElementById(`rules-container-${cat}`);
+                let addBox = document.getElementById(`add-rule-${cat}`);
+                
+                if(isAdminLoggedIn) {
+                    addBox.classList.add('active');
+                } else {
+                    addBox.classList.remove('active');
+                }
+
                 container.innerHTML = '';
                 rulesObj[cat].forEach((ruleText, index) => {
                     container.innerHTML += `
@@ -915,14 +917,13 @@
             }
         }
 
-        function addNewRule() {
-            let cat = document.getElementById('ruleCategorySelect').value;
-            let text = document.getElementById('ruleTextInput').value;
+        function addNewRule(cat) {
+            let text = document.getElementById(`input-rule-${cat}`).value;
             if(!text) { alert('الرجاء كتابة نص البند القانوني!'); return; }
             let rulesObj = getStoredRules();
             rulesObj[cat].push(text);
             localStorage.setItem('royal_rules', JSON.stringify(rulesObj));
-            document.getElementById('ruleTextInput').value = '';
+            document.getElementById(`input-rule-${cat}`).value = '';
             renderRules();
             alert('تم إضافة البند بنجاح!');
         }
@@ -935,16 +936,16 @@
             renderRules();
         }
 
-        // --- تفعيل وضع الأدمن وباسورد جديد ---
+        // --- تفعيل وضع الأدمن ---
         function toggleAdminMode() {
             if(!isAdminLoggedIn) {
-                let pass = prompt("أدخل كلمة مرور الأدمن المعقدة:");
-                if(pass === getAdminPass()) {
+                let pass = prompt("أدخل كلمة مرور الأدمن السرية:");
+                if(pass === secureAdminPassword) {
                     isAdminLoggedIn = true;
                     document.getElementById('adminPanel').classList.add('active');
                     renderNews();
                     renderRules();
-                    alert('تم تسجيل دخول الأدمن بنجاح! يمكنك الآن التعديل على الأخبار، الحذف، تعديل القوانين بالكامل.');
+                    alert('تم تسجيل دخول الأدمن بنجاح! يمكنك الآن حذف ونشر الأخبار، وإضافة أو حذف بنود القوانين من أقسامها مباشرة.');
                 } else if(pass !== null) {
                     alert('كلمة المرور غير صحيحة!');
                 }
