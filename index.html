@@ -58,7 +58,7 @@
             100% { transform: scale(1.08) translateY(-15px); opacity: 0.06; }
         }
 
-        /* --- شاشة البداية (الفيديو المباشر) --- */
+        /* --- شاشة البداية (الفيديو بصوت 10% مع زر التخطي) --- */
         #intro-screen {
             position: fixed;
             top: 0;
@@ -258,7 +258,7 @@
             box-shadow: 0 0 10px var(--primary-red);
         }
 
-        /* الصفحة الرئيسية - خلفية واضحة والنصوص في الأسفل داخل إطار أحمر للزر */
+        /* الصفحة الرئيسية */
         #home {
             padding: 0;
             max-width: 100%;
@@ -294,7 +294,6 @@
             text-shadow: 0 2px 5px rgba(0,0,0,0.8);
         }
 
-        /* زر الانضمام داخل مربع أحمر فخم */
         .discord-box-btn {
             background: rgba(15, 15, 15, 0.85);
             border: 2px solid var(--primary-red);
@@ -618,11 +617,11 @@
 </head>
 <body>
 
-    <!-- فيديو البداية -->
+    <!-- فيديو البداية (من Google Drive بصوت 10% مع زر تخطي) -->
     <div id="intro-screen">
         <div class="video-container">
-            <video id="intro-video" autoplay muted playsinline>
-                <source src="https://cdn.discordapp.com/attachments/919655708427968512/1555925524239622355/KCRY6695.MOV?ex=6ac24c10&is=6ac0fa90&hm=897dd8ab88474b6208693c9ecab5f4783ca8075995a902acb9ab0556a1ede0db&" type="video/mp4">
+            <video id="intro-video" autoplay playsinline>
+                <source src="https://docs.google.com/uc?export=download&id=1jAoceBuyNad5XSPCHG8lG_4xKqenistV" type="video/mp4">
                 المتصفح لا يدعم تشغيل الفيديو.
             </video>
         </div>
@@ -774,7 +773,10 @@
         const mainContent = document.getElementById('main-content');
         const introVideo = document.getElementById('intro-video');
 
-        let introTimeout = setTimeout(() => { skipIntro(); }, 8000);
+        // ضبط صوت الفيديو على 10% (0.1)
+        introVideo.volume = 0.1;
+
+        let introTimeout = setTimeout(() => { skipIntro(); }, 12000); // وقت كافي لفيديو درايف
 
         function skipIntro() {
             clearTimeout(introTimeout);
