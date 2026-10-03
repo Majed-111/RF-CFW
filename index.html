@@ -58,7 +58,7 @@
             100% { transform: scale(1.08) translateY(-15px); opacity: 0.06; }
         }
 
-        /* --- شاشة البداية (الفيديو بصوت 10% مع زر التخطي) --- */
+        /* --- شاشة البداية (الفيديو صامت تماماً مع زر التخطي) --- */
         #intro-screen {
             position: fixed;
             top: 0;
@@ -617,11 +617,11 @@
 </head>
 <body>
 
-    <!-- فيديو البداية (من Google Drive بصوت 10% مع زر تخطي) -->
+    <!-- فيديو البداية الجديد صامت تماماً -->
     <div id="intro-screen">
         <div class="video-container">
-            <video id="intro-video" autoplay playsinline>
-                <source src="https://docs.google.com/uc?export=download&id=1jAoceBuyNad5XSPCHG8lG_4xKqenistV" type="video/mp4">
+            <video id="intro-video" autoplay muted playsinline>
+                <source src="https://cdn.discordapp.com/attachments/919655708427968512/1555935815371198538/YEFY3036.MOV?ex=6ac255a6&is=6ac10426&hm=a1989c1fafcb5f701eadf5687d1d8ce5e883d2cb9563757c3b55f2bcaf6bec40&" type="video/mp4">
                 المتصفح لا يدعم تشغيل الفيديو.
             </video>
         </div>
@@ -773,10 +773,7 @@
         const mainContent = document.getElementById('main-content');
         const introVideo = document.getElementById('intro-video');
 
-        // ضبط صوت الفيديو على 10% (0.1)
-        introVideo.volume = 0.1;
-
-        let introTimeout = setTimeout(() => { skipIntro(); }, 12000); // وقت كافي لفيديو درايف
+        let introTimeout = setTimeout(() => { skipIntro(); }, 12000);
 
         function skipIntro() {
             clearTimeout(introTimeout);
