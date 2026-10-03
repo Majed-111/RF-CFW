@@ -71,7 +71,7 @@
             width: 100vw;
             height: 100vh;
             object-fit: cover;
-            transform: scale(1.15); /* تكبير بسيط لاقتصاص الزوايا والشعارات الجانبية مثل CapCut AI */
+            transform: scale(1.15); /* تكبير بسيط لاقتصاص الزوايا والشعارات الجانبية */
         }
 
         .skip-btn {
@@ -238,6 +238,7 @@
             border: 4px solid var(--primary-red);
             box-shadow: 0 0 30px rgba(211, 47, 47, 0.5);
             margin-bottom: 30px;
+            object-fit: cover;
             animation: pulseGlow 3s infinite alternate;
         }
 
@@ -278,6 +279,8 @@
             gap: 10px;
             transition: 0.3s;
             box-shadow: 0 5px 20px rgba(211, 47, 47, 0.4);
+            border: none;
+            cursor: pointer;
         }
 
         .main-btn:hover {
@@ -501,7 +504,7 @@
     <!-- فيديو البداية (أول 8 ثوانٍ صامت بدون صوت) -->
     <div id="intro-screen">
         <div class="video-container">
-            <!-- استبدل رابط الفيديو أدناه برابط الفيديو الخاص بك أو ارفعه بنفس اسم الملف -->
+            <!-- استخدام ملف الفيديو الخاص بك -->
             <video id="intro-video" autoplay muted playsinline>
                 <source src="KCRY6695.MOV" type="video/mp4">
                 المتصفح لا يدعم تشغيل الفيديو.
@@ -515,7 +518,7 @@
         <!-- شريط التنقل -->
         <header>
             <div class="logo-area">
-                <img src="rf1.png" alt="Royal Five Logo">
+                <img src="https://cdn.discordapp.com/attachments/1555059487369596938/1555059619099844620/aboqhtedit.png?backend=b2&ex=6ac1c8a0&is=6ac07720&hm=64ad05b3bcf40736d5d2b8ce36ef2748cf29350c753c06692fd5352a858b9bed&" alt="Royal Five Logo">
                 <span>ROYAL FIVE</span>
             </div>
             <nav>
@@ -533,9 +536,9 @@
 
         <!-- الصفحة الرئيسية -->
         <section id="home" class="active-section">
-            <img src="rf1.png" alt="Royal Five" class="hero-logo">
+            <img src="https://cdn.discordapp.com/attachments/1555059487369596938/1555059619099844620/aboqhtedit.png?backend=b2&ex=6ac1c8a0&is=6ac07720&hm=64ad05b3bcf40736d5d2b8ce36ef2748cf29350c753c06692fd5352a858b9bed&" alt="Royal Five" class="hero-logo">
             <h1>ROYAL FIVE ROLEPLAY</h1>
-            <p>أقوى تجربة حياة واقعية في سيرفرات FiveM. نظام متوازن، سيناريوهات حماسية، ومجتمع احترافي بانتظارك.</p>
+            <p>أقوى تجربة حياة واقعية في سيرفرات FiveM. نظام متوازن، سيناريوهات حماسية، ومجتمع احترافي بانتظارك[cite: 1, 2, 3, 4].</p>
             <div class="hero-btns">
                 <a href="https://discord.gg/m2SkpuJ26" target="_blank" class="main-btn">
                     <i class="fa-solid fa-gamepad"></i> انضم للسيرفر الآن
@@ -569,7 +572,7 @@
         <section id="news">
             <h2 class="section-title">الأخبار والتحديثات الأخيرة</h2>
             
-            <!-- لوحة التحكم الخاصة بالأدمن (تظهر فقط عند تسجيل الدخول كأدمن) -->
+            <!-- لوحة التحكم الخاصة بالأدمن -->
             <div id="adminPanel" class="admin-controls">
                 <h3 style="color: var(--primary-red); margin-bottom: 15px;"><i class="fa-solid fa-gear"></i> لوحة تحكم الأدمن (إضافة خبر جديد)</h3>
                 <input type="text" id="newsTitleInput" placeholder="عنوان الخبر...">
@@ -778,7 +781,7 @@
         // تفعيل وضع الأدمن بكلمة مرور سريعة
         function toggleAdminMode() {
             let pass = prompt("أدخل كلمة مرور الأدمن:");
-            if(pass === "admin123") { // يمكنك تغيير كلمة المرور هنا
+            if(pass === "admin123") { // كلمة المرور الافتراضية
                 document.getElementById('adminPanel').classList.toggle('active');
                 alert('تم تفعيل صلاحيات الأدمن بنجاح! يمكنك الآن إضافة وتعديل الأخبار.');
             } else if(pass !== null) {
