@@ -1,1 +1,795 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royal Five | FiveM Server</title>
+    <!-- خط عربي فخم -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- مكتبة الأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-red: #d32f2f;
+            --dark-red: #8b0000;
+            --bg-black: #0a0a0a;
+            --bg-card: #121212;
+            --border-color: #222;
+            --text-main: #ffffff;
+            --text-muted: #b0b0b0;
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-black);
+            color: var(--text-main);
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at center, #1a0505 0%, #0a0a0a 70%);
+            min-height: 100vh;
+        }
+
+        /* --- شاشة البداية (الفيديو) --- */
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        #intro-screen.hide {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .video-container {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #intro-video {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            transform: scale(1.15); /* تكبير بسيط لاقتصاص الزوايا والشعارات الجانبية مثل CapCut AI */
+        }
+
+        .skip-btn {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(211, 47, 47, 0.8);
+            color: #fff;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            z-index: 10000;
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4);
+            transition: 0.3s;
+        }
+
+        .skip-btn:hover {
+            background: var(--primary-red);
+            transform: translateX(-50%) scale(1.05);
+        }
+
+        /* --- محتوى الموقع الرئيسي --- */
+        #main-content {
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        #main-content.show {
+            opacity: 1;
+        }
+
+        /* شريط التنقل العلوي */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            z-index: 1000;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-area img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-red);
+        }
+
+        .logo-area span {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            background: linear-gradient(45deg, #fff, var(--primary-red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav ul li a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+            font-size: 15px;
+        }
+
+        nav ul li a:hover, nav ul li a.active {
+            color: var(--primary-red);
+            text-shadow: 0 0 10px rgba(211, 47, 47, 0.5);
+        }
+
+        .discord-header-btn {
+            background: #5865F2;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+
+        .discord-header-btn:hover {
+            background: #4752C4;
+            box-shadow: 0 0 15px rgba(88, 101, 242, 0.4);
+        }
+
+        /* الأقسام العامة والانتقاليات */
+        section {
+            padding: 120px 20px 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        section.active-section {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 35px;
+            font-weight: 900;
+            margin-bottom: 50px;
+            color: #fff;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--primary-red);
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--primary-red);
+        }
+
+        /* الصفحة الرئيسية */
+        #home {
+            text-align: center;
+            align-items: center;
+            background: radial-gradient(circle, rgba(211,47,47,0.1) 0%, rgba(10,10,10,0) 70%);
+        }
+
+        .hero-logo {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 4px solid var(--primary-red);
+            box-shadow: 0 0 30px rgba(211, 47, 47, 0.5);
+            margin-bottom: 30px;
+            animation: pulseGlow 3s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 20px rgba(211, 47, 47, 0.4); }
+            100% { box-shadow: 0 0 40px rgba(211, 47, 47, 0.8); }
+        }
+
+        #home h1 {
+            font-size: 50px;
+            font-weight: 900;
+            margin-bottom: 15px;
+        }
+
+        #home p {
+            color: var(--text-muted);
+            font-size: 18px;
+            max-width: 600px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 20px;
+        }
+
+        .main-btn {
+            background: var(--primary-red);
+            color: white;
+            padding: 12px 35px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+            box-shadow: 0 5px 20px rgba(211, 47, 47, 0.4);
+        }
+
+        .main-btn:hover {
+            background: var(--dark-red);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(211, 47, 47, 0.6);
+        }
+
+        /* معلومات السيرفر */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            width: 100%;
+        }
+
+        .info-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .info-card:hover {
+            border-color: var(--primary-red);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(211, 47, 47, 0.2);
+        }
+
+        .info-card i {
+            font-size: 40px;
+            color: var(--primary-red);
+            margin-bottom: 20px;
+        }
+
+        .info-card h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .info-card p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* الأخبار والتحديثات (مع لوحة الأدمن) */
+        .admin-controls {
+            background: rgba(211, 47, 47, 0.05);
+            border: 1px dashed var(--primary-red);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .admin-controls.active {
+            display: block;
+        }
+
+        .admin-controls input, .admin-controls textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: #fff;
+            border-radius: 5px;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            width: 100%;
+        }
+
+        .news-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+
+        .news-card:hover {
+            border-color: var(--primary-red);
+        }
+
+        .news-content {
+            padding: 25px;
+        }
+
+        .news-date {
+            color: var(--primary-red);
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .news-card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .news-card p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* القوانين */
+        .rules-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 35px;
+            flex-wrap: wrap;
+        }
+
+        .rule-tab-btn {
+            background: var(--bg-card);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .rule-tab-btn.active, .rule-tab-btn:hover {
+            background: var(--primary-red);
+            color: #fff;
+            border-color: var(--primary-red);
+        }
+
+        .rules-content-box {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 12px;
+            width: 100%;
+        }
+
+        .rules-content-box.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .rule-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 15px;
+            color: #ddd;
+        }
+
+        .rule-item i {
+            color: var(--primary-red);
+            margin-top: 5px;
+        }
+
+        /* تذييل الصفحة (Footer) */
+        footer {
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 14px;
+            background: rgba(10, 10, 10, 0.95);
+        }
+
+        footer span {
+            color: var(--primary-red);
+            font-weight: 700;
+        }
+
+        /* زر الدخول كأدمن سري */
+        .admin-login-trigger {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            z-index: 999;
+            transition: 0.3s;
+        }
+
+        .admin-login-trigger:hover {
+            background: var(--primary-red);
+            color: #fff;
+            border-color: var(--primary-red);
+        }
+
+        /* استجابة الجوال */
+        @media(max-width: 768px) {
+            header { padding: 15px 20px; }
+            nav ul { display: none; }
+            #home h1 { font-size: 35px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- فيديو البداية (أول 8 ثوانٍ صامت بدون صوت) -->
+    <div id="intro-screen">
+        <div class="video-container">
+            <!-- استبدل رابط الفيديو أدناه برابط الفيديو الخاص بك أو ارفعه بنفس اسم الملف -->
+            <video id="intro-video" autoplay muted playsinline>
+                <source src="KCRY6695.MOV" type="video/mp4">
+                المتصفح لا يدعم تشغيل الفيديو.
+            </video>
+        </div>
+        <button class="skip-btn" onclick="skipIntro()">تخطي المقدمة <i class="fa-solid fa-angle-left"></i></button>
+    </div>
+
+    <!-- محتوى الموقع -->
+    <div id="main-content">
+        <!-- شريط التنقل -->
+        <header>
+            <div class="logo-area">
+                <img src="rf1.png" alt="Royal Five Logo">
+                <span>ROYAL FIVE</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home" class="nav-link active" onclick="switchSection('home')">الرئيسية</a></li>
+                    <li><a href="#info" class="nav-link" onclick="switchSection('info')">معلومات السيرفر</a></li>
+                    <li><a href="#news" class="nav-link" onclick="switchSection('news')">الأخبار</a></li>
+                    <li><a href="#rules" class="nav-link" onclick="switchSection('rules')">القوانين</a></li>
+                </ul>
+            </nav>
+            <a href="https://discord.gg/m2SkpuJ26" target="_blank" class="discord-header-btn">
+                <i class="fa-brands fa-discord"></i> ديسكورد السيرفر
+            </a>
+        </header>
+
+        <!-- الصفحة الرئيسية -->
+        <section id="home" class="active-section">
+            <img src="rf1.png" alt="Royal Five" class="hero-logo">
+            <h1>ROYAL FIVE ROLEPLAY</h1>
+            <p>أقوى تجربة حياة واقعية في سيرفرات FiveM. نظام متوازن، سيناريوهات حماسية، ومجتمع احترافي بانتظارك.</p>
+            <div class="hero-btns">
+                <a href="https://discord.gg/m2SkpuJ26" target="_blank" class="main-btn">
+                    <i class="fa-solid fa-gamepad"></i> انضم للسيرفر الآن
+                </a>
+            </div>
+        </section>
+
+        <!-- معلومات السيرفر -->
+        <section id="info">
+            <h2 class="section-title">مميزات سيرفر Royal Five</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <h3>حياة واقعية بحتة</h3>
+                    <p>تقمص كامل للشخصيات مع قوانين صارمة تضمن متعة السيناريو وعدم التخريب.</p>
+                </div>
+                <div class="info-card">
+                    <i class="fa-solid fa-car-tunnel"></i>
+                    <h3>سرقات وعصابات متطورة</h3>
+                    <p>تنوع كبير في السرقات (محلات، بنوك، جوال) مع وحدات أمنية متكاملة للحالات.</p>
+                </div>
+                <div class="info-card">
+                    <i class="fa-solid fa-bolt"></i>
+                    <h3>أداء عالي وثبات</h3>
+                    <p>سيرفر خالي من اللاغ (No Lag) مع تحسينات مستمرة وتحديثات أسبوعية.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- الأخبار والتحديثات -->
+        <section id="news">
+            <h2 class="section-title">الأخبار والتحديثات الأخيرة</h2>
+            
+            <!-- لوحة التحكم الخاصة بالأدمن (تظهر فقط عند تسجيل الدخول كأدمن) -->
+            <div id="adminPanel" class="admin-controls">
+                <h3 style="color: var(--primary-red); margin-bottom: 15px;"><i class="fa-solid fa-gear"></i> لوحة تحكم الأدمن (إضافة خبر جديد)</h3>
+                <input type="text" id="newsTitleInput" placeholder="عنوان الخبر...">
+                <textarea id="newsDescInput" rows="3" placeholder="محتوى الخبر أو التحديث..."></textarea>
+                <button class="main-btn" onclick="addNewNews()">نشر الخبر</button>
+            </div>
+
+            <div class="news-grid" id="newsContainer">
+                <!-- يتم تعبئة الأخبار ديناميكياً -->
+            </div>
+        </section>
+
+        <!-- القوانين -->
+        <section id="rules">
+            <h2 class="section-title">قوانين السيرفر الرسمية</h2>
+            
+            <div class="rules-tabs">
+                <button class="rule-tab-btn active" onclick="openRuleTab(event, 'general-rules')">القوانين العامة</button>
+                <button class="rule-tab-btn" onclick="openRuleTab(event, 'robberies-rules')">السرقات والرهائن</button>
+                <button class="rule-tab-btn" onclick="openRuleTab(event, 'police-rules')">الوحدات العسكرية</button>
+                <button class="rule-tab-btn" onclick="openRuleTab(event, 'crime-rules')">قوانين الإجرام</button>
+                <button class="rule-tab-btn" onclick="openRuleTab(event, 'discord-rules')">قوانين الديسكورد</button>
+            </div>
+
+            <!-- القوانين العامة -->
+            <div id="general-rules" class="rules-content-box active">
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> تقمص الشخصية بالاقوال والافعال بدقة كاملة.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> يمنع التحدث بالسياسة والاعراض والدين وايضا المضايقات وفي حال تم رصد اياً منها (باند نهائي).</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> يمنع تقليد الكركترات والاسماء الموجوده بالسيرفر بأي طريقة كانت.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> يجب وضع اسم كركتر واقعي.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> في حال حضرت سيناريو باحدى كركتراتك، يمنع حضور كركتر اخر لك بالسيناريو نفسه.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> يمنع دخول البيت او الشقه اثناء السيناريو.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> يجب تشغيل برنامج التصوير مع وجود الصوت (20 دقيقة) اثناء اللعب عبر برنامج جيفورس ويجب ان يكون على الشاشة كاملة ويمنع استخدام خاصية القيم كابتشر وسيتعرض للمحاسبة في حال عدم وجوده.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> يمنع التدخل في سيناريو قائم.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> يمنع لبس الملابس الجيشية والعسكريه ومن ضمنها الحزام العسكري.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> يمنع التعرض للمسعفين الا في حال تعرض لك ايضا، ويمنع سرقة وتدمير اغراض الشرطة والمسعفيين.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> تمنع الشخصنة بجميع اشكالها وانواعها.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> يمنع التواصل الغير شرعي مثل: الدسكورد والبرامج المشابه له (Meta Gaming).</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> يمنع إرتداء او إستعمال اي خوذة اثناء مشاركتك في اي إطلاق ناري.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> يمنع تلوين السيارة العسكريه الى لون لاينتمي الى قطاعك.</div>
+            </div>
+
+            <!-- السرقات والرهائن -->
+            <div id="robberies-rules" class="rules-content-box">
+                <h3 style="color:var(--primary-red); margin-bottom:15px;"><i class="fa-solid fa-user-group"></i> عدد الأشخاص بالسرقات:</h3>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> Store Robbery - (1-3)</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> ATM Robbery - (1-3)</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> House Robbery - (1-4)</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> DigitalDen robbery - (2-5)</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> Laundromat robbery - (2-5)</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> Cash Exchange robbery - (3-6)</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> Flika robbery - (4-7)</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> Jewelry robbery - (5-8)</div>
+
+                <h3 style="color:var(--primary-red); margin:20px 0 15px;"><i class="fa-solid fa-triangle-exclamation"></i> تنبيه: السرقات التالية يجب فيها جلب رهينة:</h3>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> DigitalDen Robbery - (2-5)</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> Laundromat Robbery - (2-5)</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> Cash Exchange Robbery - (2-6)</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> Flika robbery - (2-6)</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> Jewelry Robbery - (2-7)</div>
+            </div>
+
+            <!-- الوحدات العسكرية -->
+            <div id="police-rules" class="rules-content-box">
+                <h3 style="color:var(--primary-red); margin-bottom:15px;"><i class="fa-solid fa-shield"></i> الوحدات المباشرة للحالات (الحد الأقصى للعساكر):</h3>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> Store Robbery: (1) - يمنع حضور أكثر من 4 عساكر.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> ATM Robbery: (1) - يمنع حضور أكثر من 4 عساكر.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> House robbery: (2) - يمنع حضور أكثر من 5 عساكر.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> Truck Robbery: (3) - يمنع حضور أكثر من 6 عساكر.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> DigitalDen Robbery: (6) - يمنع حضور أكثر من 8 عساكر.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> Laundromat Robbery: (6) - يمنع حضور أكثر من 8 عساكر.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> Cash Exchange Robbery: (7) - يمنع حضور أكثر من 8 عساكر.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> Fleeca robbery: (8) - يمنع حضور أكثر من 7 عساكر.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> Jewelry Robbery: (9) - يمنع حضور أكثر من 10 عساكر.</div>
+                
+                <h3 style="color:var(--primary-red); margin:20px 0 15px;"><i class="fa-solid fa-door-open"></i> الحالات المفتوحة:</h3>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> للاعبين: 9 كحد أقصى (9 MAX).</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> للشرطة: 12 كحد أقصى (12 MAX).</div>
+            </div>
+
+            <!-- قوانين الإجرام -->
+            <div id="crime-rules" class="rules-content-box">
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> يجب عليك فهم معنى الحياة الواقعية سواء كنت مجرم او رهينة وذلك بقياسها بالحياة الواقعية.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> يمنع الاتفاق مع اي شخص ليصبح رهينة.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> مدة رهن الرهينة (20 دقيقة) الا في حال بدأ السيناريو يلغى الوقت.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> يمنع المتاجره بالممنوعات في المناطق الامنه و يمنع النصب والاحتيال في المناطق الامنه.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> يمنع سرقة المواطن الا بسبب وجود عداوه واثبات العداوه باكثر من موقف (3 مواقف وتكون مثبته بالمقاطع).</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> حد المجموعات او العائلات المسموح فقط 15 شخصاً.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> يمنع تحالف العصابات ضد الداخلية أو ضد مجموعة أو عصابة أخرى باستثناء السرقة ويجب الالتزام بعدد السرقة.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> يمنع منعا باتا خطف رهينه بغاية التوجه للسجن والتفاوض مع العساكر لاطلاق سراح اي سجين.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> يمنع الاعتداء على مفاوض الشرطة في السيناريو ويمنع الاعتداء على مفاوض المجرمين.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> يمنع مقاومة السلاح الناري بسلاح ابيض مهما كانت الحاله + يمنع مقاومة اي سلاح ثقيل بسلاح خفيف مثل الجلوك.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> يمنع اطلاق النار او خطف العسكري في اي قضية مروريه.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> يمنع منعاً باتاً مشاركة الرهينة للخاطفين في نص السيناريو.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> يمنع تقليد ملابس احد العصابات.</div>
+            </div>
+
+            <!-- قوانين الديسكورد -->
+            <div id="discord-rules" class="rules-content-box">
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> احترام الآخرين: يُمنع تماماً التنمر، التحرش، الخطاب الذي يحث على الكراهية، أو مهاجمة أي شخص بناءً على عرقه، جنسه، دينه، أو توجهه.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> منع المحتوى الجنسي الصريح (NSFW): يُحظر تماماً مشاركة الصور، الفيديوهات، أو الروابط ذات الطابع الجنسي الصريح أو العنف المفرط.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> عدم نشر المحتوى غير القانوني: يُمنع الترويج أو المشاركة في أنشطة غير قانونية مثل القرصنة أو بيع المواد المخدرة.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> منع التهديدات والعنف: يُحظر التهديد بالعنف أو تشجيع إيذاء النفس أو الآخرين.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> حماية الخصوصية: يُمنع تماماً نشر معلومات شخصية للآخرين (مثل أرقام الهواتف أو العناوين) دون إذنهم (Doxxing).</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> منع السبام والإعلانات المزعجة: يُحظر إرسال رسائل متكررة مزعجة أو نشر روابط إعلانية لسيرفرات أخرى.</div>
+                <div class="rule-item"><i class="fa-solid fa-circle-dot"></i> حظر الحسابات الوهمية والتحايل: يُمنع استخدام حسابات متعددة للهروب من العقوبات أو انتحال صفة المشرفين.</div>
+            </div>
+        </section>
+
+        <!-- حقوق السيرفر -->
+        <footer>
+            <p>جميع الحقوق محفوظة © 2026 <span>Royal Five</span> FiveM Server</p>
+        </footer>
+    </div>
+
+    <!-- زر سري لتسجيل دخول الأدمن -->
+    <button class="admin-login-trigger" onclick="toggleAdminMode()">🔐 لوحة الأدمن</button>
+
+    <script>
+        // إيقاف الفيديو وتخطي المقدمة بعد 8 ثواني تلقائياً أو عبر الزر
+        const introScreen = document.getElementById('intro-screen');
+        const mainContent = document.getElementById('main-content');
+        const introVideo = document.getElementById('intro-video');
+
+        let introTimeout = setTimeout(() => {
+            skipIntro();
+        }, 8000); // 8 ثواني بالضبط
+
+        function skipIntro() {
+            clearTimeout(introTimeout);
+            introVideo.pause();
+            introScreen.classList.add('hide');
+            mainContent.classList.add('show');
+        }
+
+        // الانتقال السلس بين الأقسام
+        function switchSection(sectionId) {
+            document.querySelectorAll('section').forEach(sec => {
+                sec.classList.remove('active-section');
+            });
+            document.getElementById(sectionId).classList.add('active-section');
+
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // تبديل تبويبات القوانين
+        function openRuleTab(evt, tabName) {
+            document.querySelectorAll('.rules-content-box').forEach(box => {
+                box.classList.remove('active');
+            });
+            document.querySelectorAll('.rule-tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        // نظام الأخبار ولوحة تحكم الأدمن (مع التخزين المحلي LocalStorage)
+        let defaultNews = [
+            { title: "افتتاح سيرفر Royal Five التجريبي", date: "2026-10-03", desc: "تم بحمد الله افتتاح سيرفر رويال فايف بحلة جديدة وتجارب سينمائية مميزة. انضم الآن!" },
+            { title: "تحديث قوانين السرقات والرهائن", date: "2026-10-01", desc: "تم تحديث أعداد الوحدات العسكرية المطلوبة في السرقات الكبرى لزيادة التوازن بين الأطراف." }
+        ];
+
+        function getStoredNews() {
+            let stored = localStorage.getItem('royal_five_news');
+            return stored ? JSON.parse(stored) : defaultNews;
+        }
+
+        function renderNews() {
+            let newsList = getStoredNews();
+            let container = document.getElementById('newsContainer');
+            container.innerHTML = '';
+            newsList.forEach(item => {
+                container.innerHTML += `
+                    <div class="news-card">
+                        <div class="news-content">
+                            <div class="news-date"><i class="fa-regular fa-calendar"></i> ${item.date}</div>
+                            <h3>${item.title}</h3>
+                            <p>${item.desc}</p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function addNewNews() {
+            let title = document.getElementById('newsTitleInput').value;
+            let desc = document.getElementById('newsDescInput').value;
+            if(!title || !desc) {
+                alert('الرجاء إدخال العنوان ووصف الخبر!');
+                return;
+            }
+            let newsList = getStoredNews();
+            let today = new Date().toISOString().split('T')[0];
+            newsList.unshift({ title, date: today, desc });
+            localStorage.setItem('royal_five_news', JSON.stringify(newsList));
+            document.getElementById('newsTitleInput').value = '';
+            document.getElementById('newsDescInput').value = '';
+            renderNews();
+            alert('تم نشر الخبر بنجاح!');
+        }
+
+        // تفعيل وضع الأدمن بكلمة مرور سريعة
+        function toggleAdminMode() {
+            let pass = prompt("أدخل كلمة مرور الأدمن:");
+            if(pass === "admin123") { // يمكنك تغيير كلمة المرور هنا
+                document.getElementById('adminPanel').classList.toggle('active');
+                alert('تم تفعيل صلاحيات الأدمن بنجاح! يمكنك الآن إضافة وتعديل الأخبار.');
+            } else if(pass !== null) {
+                alert('كلمة المرور غير صحيحة!');
+            }
+        }
+
+        // تحميل الأخبار عند فتح الصفحة
+        window.onload = function() {
+            renderNews();
+        }
+    </script>
+</body>
+</html>
